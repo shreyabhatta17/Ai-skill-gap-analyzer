@@ -1,0 +1,23 @@
+{
+  "source_note": "Starter taxonomy for review against real job postings and O*NET before production use.",
+  "skills": [
+    {
+      "name": "Python",
+      "slug": "python",
+      "category": "Programming",
+      "description": "Programming with Python and its standard ecosystem."
+    },
+    {
+      "name": "SQL",
+      "slug": "sql",
+      "category": "Data",
+      "description": "Writing queries and working with relational data."
+    },
+    {
+      "name": "Git",
+      "slug": "git",
+      "category": "Tools",
+      "description": "Source control workflows using Git."
+    }
+  ]
+}
