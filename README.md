@@ -35,8 +35,22 @@ python webapp/manage.py load_knowledge_base
 
 The loader is idempotent and can safely be run again. This knowledge base is a first draft and must be reviewed against real job postings and O*NET before it supports research conclusions or production recommendations.
 
+## Gap scoring
+
+The framework-independent scorer in `analyzer/gap_scoring.py` compares each role requirement with a user's skill level from 0 to 5. For each skill, `raw_gap = max(0, required_level - user_level)` and `weighted_gap = raw_gap * importance`. The overall gap score is `sum(weighted_gap) / sum(required_level * importance)`; the match percentage is `round((1 - overall_gap_score) * 100, 1)`. Missing skills count as level 0, and over-qualified skills receive no bonus.
+
+```python
+from analyzer.gap_scoring import calculate_gap, load_role
+
+title, requirements = load_role("data-analyst")
+report = calculate_gap(requirements, {"SQL": 4, "Python": 2}, title)
+print(report.overall_match_percent)
+print([gap.skill for gap in report.missing])
+```
+
 ## Project status
 
 - Phase 0: repository and Django project setup complete.
 - Phase 1: domain models, JSON knowledge base, loader, and tests complete.
-- Phase 3+: matching, gap scoring, recommendations, API endpoints, and frontend are not implemented yet.
+- Phase 2: framework-independent gap scoring, validation, role loading, tests, and documentation complete.
+- Phase 3+: matching, recommendations, API endpoints, and frontend are not implemented yet.
