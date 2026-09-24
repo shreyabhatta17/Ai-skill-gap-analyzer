@@ -69,6 +69,34 @@ python -m analyzer.eval_matching
 The current measured top-1 accuracy is 89.7% (52/58) on this first-pass fixture.
 It may change if the model, vocabulary, or fixture changes.
 
+## Putting it together
+
+The Phase 4 engine combines matching, gap scoring, and resource recommendations:
+
+```python
+from analyzer.engine import analyze
+
+result = analyze(
+    "data-analyst",
+    {
+        "wrote SQL queries": 3,
+        "Python": 2,
+        "I like pizza": 5,
+    },
+)
+
+print(result.role_title)                    # Data Analyst
+print(result.gap_report.overall_match_percent)
+print(result.unmatched_inputs)              # ['I like pizza']
+print([(item.priority_rank, item.skill) for item in result.recommendations])
+```
+
+`analyze()` leaves low-confidence inputs in `unmatched_inputs` rather than
+guessing. If multiple phrases resolve to the same canonical skill, it uses the
+higher user level. Recommendations include only missing or partial skills and
+may have an empty resource list when the role fixture has no resources for that
+skill.
+
 ## Project status
 
 - Phase 0: repository and Django project setup complete.

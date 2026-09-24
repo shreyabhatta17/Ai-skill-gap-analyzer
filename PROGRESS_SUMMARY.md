@@ -58,12 +58,22 @@ This document records the current implementation milestone for the university pr
   the SQL/NoSQL trap, batch ordering, and the measured accuracy threshold.
 - Measured 89.7% top-1 accuracy (52/58) on the first-pass evaluation fixture.
 
+### Phase 4: Recommender and analysis engine
+
+- Added `load_role_resources()` and the `Recommendation`/`recommend()` layer,
+  ranking missing and partial skills by the existing weighted-gap ordering.
+- Added `analyzer/engine.py` with `AnalysisResult` and `analyze()` orchestration
+  for free-text matching, duplicate-skill level resolution, scoring, and
+  recommendations.
+- Added pure recommender tests and model-backed engine tests for unmatched
+  inputs, duplicate matches, top-N recommendations, and invalid roles.
+
 ## Validation status
 
 - `python webapp/manage.py migrate` succeeds.
 - `python webapp/manage.py load_knowledge_base` succeeds on repeated runs without duplicates.
 - `python webapp/manage.py makemigrations --check --dry-run` reports no changes.
-- `pytest` passed with 23 tests after Phase 3 implementation.
+- `pytest` passes with 32 tests after Phase 4 implementation.
 - Loaded database counts: 67 skills, 5 roles, 76 requirements, 47 resources.
 
 ## Not implemented yet
@@ -77,6 +87,6 @@ These items remain intentionally deferred to later phases:
 
 ## Current project status
 
-Phase 0 through Phase 3 are complete. The project is ready for recommendation work. The knowledge base and hand-labelled matcher evaluation set are first drafts and must be reviewed against real job postings and O*NET data before being treated as authoritative.
+Phase 0 through Phase 4 are complete. The project is ready for API integration. The knowledge base and hand-labelled matcher evaluation set are first drafts and must be reviewed against real job postings and O*NET data before being treated as authoritative.
 
-Phase 2 changes are committed locally; nothing has been pushed.
+Phase 4 changes are committed locally; nothing has been pushed for this phase.
