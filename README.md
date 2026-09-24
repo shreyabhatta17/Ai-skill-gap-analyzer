@@ -48,9 +48,32 @@ print(report.overall_match_percent)
 print([gap.skill for gap in report.missing])
 ```
 
+## Skill matching
+
+Phase 3 adds a framework-independent embedding matcher in `analyzer/matching.py`.
+It embeds each of the 67 canonical skills once and compares free-text phrases with
+cosine similarity using `all-MiniLM-L6-v2`. A result is accepted when its best
+similarity is at least the default threshold of `0.55`; otherwise the result is
+rejected and includes the top three near-miss candidates for debugging. Use one
+`SkillMatcher` instance for the lifetime of a Django process rather than creating
+one per request.
+
+The first matcher run downloads the approximately 90 MB model and therefore needs
+internet access once. The reusable hand-labelled evaluation set is in
+`tests/fixtures/matching_examples.json`. Run it with:
+
+```powershell
+python -m analyzer.eval_matching
+```
+
+The current measured top-1 accuracy is 89.7% (52/58) on this first-pass fixture.
+It may change if the model, vocabulary, or fixture changes.
+
 ## Project status
 
 - Phase 0: repository and Django project setup complete.
 - Phase 1: domain models, JSON knowledge base, loader, and tests complete.
 - Phase 2: framework-independent gap scoring, validation, role loading, tests, and documentation complete.
-- Phase 3+: matching, recommendations, API endpoints, and frontend are not implemented yet.
+- Phase 3: embedding-based skill matching, reusable labelled evaluation data,
+  evaluation harness, and tests complete.
+- Phase 4+: recommendations, API endpoints, and frontend are not implemented yet.
