@@ -80,10 +80,9 @@ This document records the current implementation milestone for the university pr
 
 These items remain intentionally deferred to later phases:
 
-- Recommendation ranking/engine integration
-- Django REST API endpoints
-- Templates, frontend, and Chart.js visualizations
-- Docker, CI, and deployment configuration
+   - Django REST API endpoints
+   - Templates, frontend, and Chart.js visualizations
+   - Docker, CI, and deployment configuration
 
 ## Current project status
 
