@@ -97,6 +97,41 @@ higher user level. Recommendations include only missing or partial skills and
 may have an empty resource list when the role fixture has no resources for that
 skill.
 
+## API
+
+Phase 5 exposes two Django REST Framework endpoints. Roles are read directly
+from the versioned JSON fixtures so API validation stays aligned with
+`load_role()`.
+
+- `GET /api/roles/` returns each role's `title`, `slug`, and `description`.
+- `POST /api/skill-gap/` accepts `job_title`, a non-empty `skills` dictionary
+  with levels from 0 to 5, and optional positive `top_n`.
+
+Example request:
+
+```json
+{"job_title":"data-analyst","skills":{"Python":3,"wrote SQL queries":4,"I like pizza":5},"top_n":3}
+```
+
+The response includes `role_title`, `overall_gap_score`,
+`overall_match_percent`, `skill_gaps`, ranked `recommendations`, and
+`unmatched_inputs`:
+
+```json
+{"role_title":"Data Analyst","overall_gap_score":0.42,"overall_match_percent":58.0,"skill_gaps":[{"skill":"Statistics","required_level":4,"user_level":0,"weighted_gap":3.52,"status":"missing"}],"recommendations":[{"skill":"Statistics","priority_rank":1,"resources":[]}],"unmatched_inputs":["I like pizza"]}
+```
+
+Run the development server and try the endpoints with curl or httpie:
+
+```powershell
+python webapp\manage.py runserver
+curl http://127.0.0.1:8000/api/roles/
+curl -X POST http://127.0.0.1:8000/api/skill-gap/ -H "Content-Type: application/json" -d '{"job_title":"data-analyst","skills":{"Python":3,"SQL":4}}'
+```
+
+The embedding matcher is initialized once when the API app starts and reused
+by every request in that server process, avoiding a model load per call.
+
 ## Project status
 
 - Phase 0: repository and Django project setup complete.
@@ -104,4 +139,5 @@ skill.
 - Phase 2: framework-independent gap scoring, validation, role loading, tests, and documentation complete.
 - Phase 3: embedding-based skill matching, reusable labelled evaluation data,
   evaluation harness, and tests complete.
-- Phase 4+: recommendations, API endpoints, and frontend are not implemented yet.
+- Phase 5: recommendations and Django REST API endpoints are complete.
+- Phase 6+: frontend and Chart.js visualizations are not implemented yet.

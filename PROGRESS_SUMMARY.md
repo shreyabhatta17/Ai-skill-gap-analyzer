@@ -68,24 +68,34 @@ This document records the current implementation milestone for the university pr
 - Added pure recommender tests and model-backed engine tests for unmatched
   inputs, duplicate matches, top-N recommendations, and invalid roles.
 
+### Phase 5: Django REST API
+
+- Added a process-wide `SkillMatcher` singleton initialized by the API app's
+  `ready()` hook, preventing the model from loading per request.
+- Added request validation for role slugs/titles, non-empty skill dictionaries,
+  level range 0-5, and positive recommendation limits.
+- Added `POST /api/skill-gap/` with gap, recommendation, and unmatched-input
+  responses, plus `GET /api/roles/` backed by the role JSON fixtures.
+- Added API tests for successful analysis, validation errors, unmatched input,
+  role discovery, response consistency, and singleton identity.
+
 ## Validation status
 
 - `python webapp/manage.py migrate` succeeds.
 - `python webapp/manage.py load_knowledge_base` succeeds on repeated runs without duplicates.
 - `python webapp/manage.py makemigrations --check --dry-run` reports no changes.
-- `pytest` passes with 32 tests after Phase 4 implementation.
+- `pytest` passes with 39 tests after Phase 5 implementation.
 - Loaded database counts: 67 skills, 5 roles, 76 requirements, 47 resources.
 
 ## Not implemented yet
 
 These items remain intentionally deferred to later phases:
 
-   - Django REST API endpoints
    - Templates, frontend, and Chart.js visualizations
    - Docker, CI, and deployment configuration
 
 ## Current project status
 
-Phase 0 through Phase 4 are complete. The project is ready for API integration. The knowledge base and hand-labelled matcher evaluation set are first drafts and must be reviewed against real job postings and O*NET data before being treated as authoritative.
+Phase 0 through Phase 5 are complete. The API is ready for frontend integration. The knowledge base and hand-labelled matcher evaluation set are first drafts and must be reviewed against real job postings and O*NET data before being treated as authoritative.
 
 Phase 4 changes are committed locally; nothing has been pushed for this phase.
